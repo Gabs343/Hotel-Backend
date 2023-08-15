@@ -1,0 +1,99 @@
+@startuml  
+skinparam linetype ortho
+
+package domain{
+
+    interface HotelBuilderI{
+        + reset()
+    }
+    class HotelDirector{
+        - hotelBuilder: HotelBuilderI
+    }
+    class HotelBuilder{
+        - hotel: Hotel
+        - instance: HotelBuilder
+        - HotelBuilder()
+        + getInstance(): HotelBuilder
+    }
+
+    interface HotelComponentI{}
+
+    class Hotel{
+        - hotelComponents: HotelComponentI[]
+        - employees: Employee[]
+        - hotelSubscriptions: HotelSubscriptionI[]
+    }
+    class HotelPool{}
+    class HotelPark{}
+    class HotelRestaurant{}
+
+    class HotelFloor{}
+
+    interface HotelRoomStrategyI{}
+    class HotelRoom{
+        - roomStrategy: HotelRoomStrategyI
+        - client: Client
+    }
+    class HotelRoomStandard{}
+    class HotelRoomExecutive{}
+    class HotelRoomVIP{}
+    class HotelRoomPresidential{}
+
+    class Employee{}
+    class Client{}
+
+    interface AuthorizationComponentI{}
+    class GroupC{}
+    class Role{}
+    class Permission{}
+    class Authorization{}
+
+    interface HotelSubscriptionI{
+        - update(Client)
+    }
+
+    class HotelSubscriptionGold{}
+    class HotelSubscriptionPlatinum{}
+
+
+}
+
+HotelBuilderI <|.. HotelBuilder
+HotelBuilder o--> Hotel
+HotelDirector o--> HotelBuilderI
+
+HotelComponentI <|.up.o Hotel
+HotelComponentI <|.. HotelPool
+HotelComponentI <|.. HotelPark
+HotelComponentI <|.. HotelRestaurant
+
+Hotel o-- HotelFloor
+HotelFloor o-- HotelRoom
+
+HotelRoomStrategyI -up-o HotelRoom
+HotelRoomStrategyI <|.. HotelRoomStandard
+HotelRoomStrategyI <|.. HotelRoomExecutive
+HotelRoomStrategyI <|.. HotelRoomVIP
+HotelRoomStrategyI <|.. HotelRoomPresidential
+
+Hotel o-right- Employee
+HotelRoom o-- Client
+
+Client o-up- AuthorizationComponentI
+Employee o-- AuthorizationComponentI
+
+AuthorizationComponentI o.right.|> Authorization
+AuthorizationComponentI <|.. GroupC
+AuthorizationComponentI <|.. Role
+AuthorizationComponentI <|.. Permission
+
+GroupC o-- Permission
+GroupC o-- Role
+Role o-- Permission
+
+HotelSubscriptionI -right-o Hotel
+HotelSubscriptionI <|.up. HotelSubscriptionGold
+HotelSubscriptionI <|.. HotelSubscriptionPlatinum
+
+
+@enduml 
